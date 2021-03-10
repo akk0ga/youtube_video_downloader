@@ -1,5 +1,7 @@
+# add pytube
 from tkinter import *
 from PIL import Image, ImageTk
+from pytube import YouTube
 
 
 class App:
@@ -12,6 +14,24 @@ class App:
         self.app.geometry('800x600')
         self.app.configure(bg='#f1faee')
 
+    def __display_title(self):
+        # display app title
+        title = Label(self.app, border=None,font='Terminal 15 bold', bg='#f1faee', fg='#e63946', text=self.title)
+        title.place(x=270, y=50)
+
+    def __display_url_field(self):
+        # display entry where put the link
+        link = Entry(self.app, border=None, width=70)
+        link.insert(0, 'url')
+        x_center = (self.app_width/4)
+        link.place(x=x_center, y=400)
+
+    def __display_button_dl(self):
+        # display button to launch dl
+        button = Button(self.app, text='Download', width=50, bg='#e63946', fg='#ffffff', font='Terminal 15 bold',
+                        activebackground='#e63946', activeforeground='#ffffff')
+        button.place(x=130, y=500)
+
     def run(self):
         # display logo
         load = Image.open("img/logo.png")
@@ -20,21 +40,9 @@ class App:
         img = Label(self.app, border=None, bg='#f1faee', image=render)
         img.place(x=x_center, y=100)
 
-        # display app title
-        title = Label(self.app, border=None,font='Terminal 15 bold', bg='#f1faee', fg='#e63946', text=self.title)
-        title.place(x=270, y=50)
-
-        # display entry where put the link
-        link = Entry(self.app, border=None, width=70)
-        link.insert(0, 'url')
-        x_center = (self.app_width/4)
-        link.place(x=x_center, y=400)
-
-        # display button to launch dl
-        button = Button(self.app, text='Download', width=50, bg='#e63946', fg='#ffffff', font='Terminal 15 bold',
-                        activebackground='#e63946', activeforeground='#ffffff')
-        button.place(x=130, y=500)
-
+        self.__display_title()
+        self.__display_url_field()
+        self.__display_button_dl()
         self.app.mainloop()
 
 
