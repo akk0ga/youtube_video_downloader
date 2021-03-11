@@ -1,8 +1,9 @@
 # add pytube
 from tkinter import *
 from PIL import Image, ImageTk
+from pytube import exceptions
+from pytube import YouTube
 from converter.Video import Video
-
 
 class App(Video):
     def __init__(self):
@@ -40,11 +41,18 @@ class App(Video):
         :return:
         """
         url = url.get()
-        convertor = Video()
+        video = Video()
 
-        convertor.url = url
-        print(convertor.video)
-
+        try:
+            video.url = url
+            video.video = YouTube('url')
+            print(video.video)
+        except exceptions.RegexMatchError:
+            print('the url is not correct')
+        except exceptions.VideoPrivate:
+            print('Can\'t reach the video')
+        except exceptions.VideoUnavailable:
+            print('this video is unavailable')
 
     def run(self):
         # display logo
