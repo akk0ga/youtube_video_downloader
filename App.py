@@ -1,11 +1,12 @@
 # add pytube
 from tkinter import *
 from PIL import Image, ImageTk
-from pytube import YouTube
+from converter.Video import Video
 
 
-class App:
+class App(Video):
     def __init__(self):
+        super().__init__()
         self.app = Tk()
         self.app_width = 800
         self.app_height = 600
@@ -16,33 +17,49 @@ class App:
 
     def __display_title(self):
         # display app title
-        title = Label(self.app, border=None,font='Terminal 15 bold', bg='#f1faee', fg='#e63946', text=self.title)
+        title = Label(self.app, border=None, font='Terminal 15 bold', bg='#f1faee', fg='#e63946', text=self.title)
         title.place(x=270, y=50)
 
-    def __display_url_field(self):
+    def __url_field(self):
         # display entry where put the link
         link = Entry(self.app, border=None, width=70)
         link.insert(0, 'url')
-        x_center = (self.app_width/4)
+        x_center = (self.app_width / 4)
         link.place(x=x_center, y=400)
+        return link
 
-    def __display_button_dl(self):
+    def __button_dl(self, url: Entry):
         # display button to launch dl
         button = Button(self.app, text='Download', width=50, bg='#e63946', fg='#ffffff', font='Terminal 15 bold',
-                        activebackground='#e63946', activeforeground='#ffffff')
+                        activebackground='#e63946', activeforeground='#ffffff', command=lambda: self.__convert(url))
         button.place(x=130, y=500)
+
+    def __convert(self, url: Entry):
+        """
+        convert video to the format select
+        :return:
+        """
+        url = url.get()
+        convertor = Video()
+
+        convertor.url = url
+        print(convertor.url)
+
 
     def run(self):
         # display logo
         load = Image.open("img/logo.png")
         render = ImageTk.PhotoImage(load)
-        x_center = (self.app_width/2) - (render.width()/2)
+        x_center = (self.app_width / 2) - (render.width() / 2)
         img = Label(self.app, border=None, bg='#f1faee', image=render)
         img.place(x=x_center, y=100)
 
         self.__display_title()
-        self.__display_url_field()
-        self.__display_button_dl()
+
+        url = self.__url_field()
+        print(type(url))
+
+        self.__button_dl(url)
         self.app.mainloop()
 
 
