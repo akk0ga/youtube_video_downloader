@@ -45,8 +45,9 @@ class App(Video):
 
         try:
             video.url = url
-            video.video = YouTube('url')
-            print(video.video)
+            video.video = YouTube(url)
+            print(video._get_title())
+            print(video._get_thumbnail())
         except exceptions.RegexMatchError:
             print('the url is not correct')
         except exceptions.VideoPrivate:

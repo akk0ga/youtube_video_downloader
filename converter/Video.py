@@ -4,7 +4,7 @@ from pytube import YouTube
 class Video:
     def __init__(self):
         self.__url: str = ''
-        self.__video: int or None = None
+        self.__video: YouTube or None = None
 
     def _get_title(self) -> str:
         """
@@ -13,7 +13,8 @@ class Video:
         return the video title
         :return:
         """
-        pass
+        title = self.__video.title
+        return title
 
     def _get_thumbnail(self):
         """
@@ -22,6 +23,8 @@ class Video:
         return the video thumbnail
         :return:
         """
+        thumbnail = self.__video.thumbnail_url
+        return thumbnail
         pass
 
     """
