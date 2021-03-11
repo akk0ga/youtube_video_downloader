@@ -43,7 +43,7 @@ class App(Video):
         convertor = Video()
 
         convertor.url = url
-        print(convertor.url)
+        print(convertor.video)
 
 
     def run(self):
