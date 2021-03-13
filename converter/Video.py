@@ -1,5 +1,6 @@
 from pytube import YouTube
 
+
 class Video:
     def __init__(self):
         self.__url: str = ''

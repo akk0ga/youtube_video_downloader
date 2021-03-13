@@ -41,13 +41,26 @@ class App(Video):
         x_center = (self.app_width / 2) - (render.width() / 2)
         # create the image container
         logo = Label(self.app, border=None, bg='#f1faee', image=render)
-        # display the image
+        # insert the image in container
         logo.image = render
         logo.place(x=x_center, y=70)
 
     def __display_video_title(self, video: Video):
         title = Label(self.app, border=None, font='Terminal 15 bold', bg='#f1faee', fg='#e63946', text=video._get_title())
         title.place(x=350, y=250)
+
+    def __display_video_thumbnail(self, video: Video):
+        get_image = requests.get(video._get_thumbnail(), stream=True).raw
+
+        load_image = Image.open(get_image)
+        load_image.resize((20, 20))
+
+        image = ImageTk.PhotoImage(load_image)
+        thumbnail = Label(self.app, border=None, bg='#f1faee', image=image)
+
+        x_center = (self.app_width / 2) - (image.width() / 2)
+        thumbnail.image = image
+        thumbnail.place(x=x_center, y=500)
 
     def __button_dl(self, url: Entry):
         # display button to launch dl
@@ -67,7 +80,7 @@ class App(Video):
             video.video = YouTube(url)
             print(video._get_thumbnail())
             self.__display_video_title(video)
-
+            self.__display_video_thumbnail(video)
         except exceptions.RegexMatchError:
             print('the url is not correct')
         except exceptions.VideoPrivate:
@@ -76,9 +89,7 @@ class App(Video):
             print('this video is unavailable')
 
     def run(self):
-        # display logo
         self.__display_logo()
-
         self.__display_title()
         self.__button_dl(self.__url_field())
         self.app.mainloop()
