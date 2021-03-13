@@ -1,6 +1,5 @@
 from pytube import YouTube
 
-
 class Video:
     def __init__(self):
         self.__url: str = ''
@@ -8,8 +7,6 @@ class Video:
 
     def _get_title(self) -> str:
         """
-        TODO
-            get the title of video
         return the video title
         :return:
         """
@@ -18,8 +15,6 @@ class Video:
 
     def _get_thumbnail(self):
         """
-        TODO
-            get the video thumbnail
         return the video thumbnail
         :return:
         """

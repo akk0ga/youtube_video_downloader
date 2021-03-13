@@ -4,6 +4,7 @@ from PIL import Image, ImageTk
 from pytube import exceptions
 from pytube import YouTube
 from converter.Video import Video
+import requests
 
 class App(Video):
     def __init__(self):
@@ -12,28 +13,40 @@ class App(Video):
         self.app_width = 800
         self.app_height = 600
         self.title = 'Youtube video downloader'
+
         self.app.title(self.title)
         self.app.geometry('800x600')
         self.app.configure(bg='#f1faee')
+        self.app.iconbitmap('img/logo.ico')
 
     def __display_title(self):
         # display app title
         title = Label(self.app, border=None, font='Terminal 15 bold', bg='#f1faee', fg='#e63946', text=self.title)
-        title.place(x=270, y=50)
+        title.place(x=270, y=20)
 
     def __url_field(self):
         # display entry where put the link
         link = Entry(self.app, border=None, width=70)
         link.insert(0, 'url')
         x_center = (self.app_width / 4)
-        link.place(x=x_center, y=400)
+        link.place(x=x_center, y=500)
         return link
+
+    def __display_logo(self):
+        render = ImageTk.PhotoImage(Image.open("img/logo.png"))
+        x_center = (self.app_width / 2) - (render.width() / 2)
+        logo = Label(self.app, border=None, bg='blue', image=render)
+        logo.place(x=x_center, y=70)
+
+    def __display_video_title(self, video: Video):
+        title = Label(self.app, border=None, font='Terminal 15 bold', bg='#f1faee', fg='#e63946', text=video._get_title())
+        title.place(x=350, y=250)
 
     def __button_dl(self, url: Entry):
         # display button to launch dl
         button = Button(self.app, text='Download', width=50, bg='#e63946', fg='#ffffff', font='Terminal 15 bold',
                         activebackground='#e63946', activeforeground='#ffffff', command=lambda: self.__convert(url))
-        button.place(x=130, y=500)
+        button.place(x=130, y=550)
 
     def __convert(self, url: Entry):
         """
@@ -42,12 +55,12 @@ class App(Video):
         """
         url = url.get()
         video = Video()
-
         try:
             video.url = url
             video.video = YouTube(url)
-            print(video._get_title())
             print(video._get_thumbnail())
+            self.__display_video_title(video)
+
         except exceptions.RegexMatchError:
             print('the url is not correct')
         except exceptions.VideoPrivate:
@@ -57,18 +70,10 @@ class App(Video):
 
     def run(self):
         # display logo
-        load = Image.open("img/logo.png")
-        render = ImageTk.PhotoImage(load)
-        x_center = (self.app_width / 2) - (render.width() / 2)
-        img = Label(self.app, border=None, bg='#f1faee', image=render)
-        img.place(x=x_center, y=100)
+        self.__display_logo()
 
         self.__display_title()
-
-        url = self.__url_field()
-        print(type(url))
-
-        self.__button_dl(url)
+        self.__button_dl(self.__url_field())
         self.app.mainloop()
 
 
