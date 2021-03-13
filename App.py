@@ -6,6 +6,7 @@ from pytube import YouTube
 from converter.Video import Video
 import requests
 
+
 class App(Video):
     def __init__(self):
         super().__init__()
@@ -17,6 +18,7 @@ class App(Video):
         self.app.title(self.title)
         self.app.geometry('800x600')
         self.app.configure(bg='#f1faee')
+        self.app.resizable(False, False)
         self.app.iconbitmap('img/logo.ico')
 
     def __display_title(self):
@@ -33,9 +35,14 @@ class App(Video):
         return link
 
     def __display_logo(self):
+        # open the image and create
         render = ImageTk.PhotoImage(Image.open("img/logo.png"))
+        # calc to place logo at center
         x_center = (self.app_width / 2) - (render.width() / 2)
-        logo = Label(self.app, border=None, bg='blue', image=render)
+        # create the image container
+        logo = Label(self.app, border=None, bg='#f1faee', image=render)
+        # display the image
+        logo.image = render
         logo.place(x=x_center, y=70)
 
     def __display_video_title(self, video: Video):
