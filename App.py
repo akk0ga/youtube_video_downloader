@@ -46,21 +46,23 @@ class App(Video):
         logo.place(x=x_center, y=70)
 
     def __display_video_title(self, video: Video):
-        title = Label(self.app, border=None, font='Terminal 15 bold', bg='#f1faee', fg='#e63946', text=video._get_title())
-        title.place(x=350, y=250)
+        title = Label(self.app, border=None, font='Terminal 15 bold', bg='#f1faee', fg='#e63946',
+                      text=video._get_title())
+        title.place(x=30, y=210)
 
     def __display_video_thumbnail(self, video: Video):
+        # get the image from url
         get_image = requests.get(video._get_thumbnail(), stream=True).raw
-
+        # load and resize the image retrieve
         load_image = Image.open(get_image)
-        load_image.resize((20, 20))
-
-        image = ImageTk.PhotoImage(load_image)
+        resize_image = load_image.resize((200, 100))
+        # create the container for image
+        image = ImageTk.PhotoImage(resize_image)
         thumbnail = Label(self.app, border=None, bg='#f1faee', image=image)
-
+        # place the image
         x_center = (self.app_width / 2) - (image.width() / 2)
         thumbnail.image = image
-        thumbnail.place(x=x_center, y=500)
+        thumbnail.place(x=x_center, y=300)
 
     def __button_dl(self, url: Entry):
         # display button to launch dl
