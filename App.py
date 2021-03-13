@@ -46,9 +46,19 @@ class App(Video):
         logo.place(x=x_center, y=70)
 
     def __display_video_title(self, video: Video):
+        video_title = video._get_title()
+
+        if len(video_title) <= 60:
+            max_char = 0
+            x = 100
+        else:
+            max_char = 450
+            x = self.app_width / 4
+
         title = Label(self.app, border=None, font='Terminal 15 bold', bg='#f1faee', fg='#e63946',
-                      text=video._get_title())
-        title.place(x=30, y=210)
+                      text=video_title, wraplength=max_char)
+        print(len(video_title))
+        title.place(x=x, y=210)
 
     def __display_video_thumbnail(self, video: Video):
         # get the image from url
@@ -80,7 +90,6 @@ class App(Video):
         try:
             video.url = url
             video.video = YouTube(url)
-            print(video._get_thumbnail())
             self.__display_video_title(video)
             self.__display_video_thumbnail(video)
         except exceptions.RegexMatchError:
