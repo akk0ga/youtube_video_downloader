@@ -23,6 +23,12 @@ class Video:
         return thumbnail
         pass
 
+    def _download_video(self):
+        print('dl video')
+
+    def _download_video_audio(self):
+        print('dl audio')
+
     """
     ===================================
     getter & setter

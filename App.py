@@ -29,7 +29,7 @@ class App(Video):
     def __url_field(self):
         # display entry where put the link
         link = Entry(self.app, border=None, width=70)
-        link.insert(0, 'url')
+        link.insert(0, 'https://www.youtube.com/watch?v=DAkZ8kIvrxk&ab_channel=OfflineTV')
         x_center = (self.app_width / 4)
         link.place(x=x_center, y=500)
         return link
@@ -85,13 +85,19 @@ class App(Video):
         convert video to the format select
         :return:
         """
-        url = url.get()
-        video = Video()
         try:
+            url = url.get()
+            video: Video = Video()
+
             video.url = url
             video.video = YouTube(url)
             self.__display_video_title(video)
             self.__display_video_thumbnail(video)
+            for stream in video.video.streams.filter(file_extension='mp4'):
+                print(stream)
+
+            video._download_video()
+
         except exceptions.RegexMatchError:
             print('the url is not correct')
         except exceptions.VideoPrivate:
