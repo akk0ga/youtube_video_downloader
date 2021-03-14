@@ -71,11 +71,11 @@ class App(Video):
         if len(video_title) <= 60:
             max_char = 0
             x = self.app_width // 6
-            y = 350
+            y = 250
         else:
             max_char = 450
             x = self.app_width // 3.5
-            y = 300
+            y = 220
 
         title = Label(self.app, border=None, font='Terminal 15 bold', bg='#f1faee', fg='#e63946',
                       text=video_title, wraplength=max_char)
@@ -91,14 +91,14 @@ class App(Video):
         get_image = requests.get(video._get_thumbnail(), stream=True).raw
         # load and resize the image retrieve
         load_image = Image.open(get_image)
-        resize_image = load_image.resize((200, 100))
+        resize_image = load_image.resize((400, 200))
         # create the container for image
         image = ImageTk.PhotoImage(resize_image)
         thumbnail = Label(self.app, border=None, bg='#f1faee', image=image)
         # place the image
         x_center = (self.app_width / 2) - (image.width() / 2)
         thumbnail.image = image
-        thumbnail.place(x=x_center, y=380)
+        thumbnail.place(x=x_center, y=290)
 
     """
     ==========================================
