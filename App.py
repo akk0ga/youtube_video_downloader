@@ -28,12 +28,12 @@ class App(Video):
     ==========================================
     """
 
-    def __display_title(self):
+    def __display_title(self) -> None:
         # display app title
         title = Label(self.app, border=None, font='Terminal 15 bold', bg='#f1faee', fg='#e63946', text=self.title)
         title.place(x=270, y=20)
 
-    def __display_logo(self):
+    def __display_logo(self) -> None:
         # get and resize the image
         get_image = Image.open("img/logo.png")
         resize_image = get_image.resize((32, 32))
@@ -45,7 +45,7 @@ class App(Video):
         logo.image = render
         logo.place(x=540, y=15)
 
-    def __url_field(self):
+    def __url_field(self) -> Entry:
         # display entry where put the link
         link = Entry(self.app, border=None, width=70)
         link.insert(0,
@@ -60,7 +60,7 @@ class App(Video):
     ==========================================
     """
 
-    def __display_video_title(self, video: Video):
+    def __display_video_title(self, video: Video) -> None:
         """
         display video title
         :param video:
@@ -81,7 +81,7 @@ class App(Video):
                       text=video_title, wraplength=max_char)
         title.place(x=x, y=y)
 
-    def __display_video_thumbnail(self, video: Video):
+    def __display_video_thumbnail(self, video: Video) -> None:
         """
         display the video thumbnail
         :param video:
@@ -106,7 +106,7 @@ class App(Video):
     ==========================================
     """
 
-    def __select_resolution(self, resolution: list, video: Video):
+    def __select_resolution(self, resolution: list, video: Video) -> None:
         """
         create dropdown to select the video resolution
         :param resolution:
@@ -114,7 +114,7 @@ class App(Video):
         :return:
         """
 
-        def resolution_selected():
+        def resolution_selected() -> None:
             """
             execute when trigger dl button
             :return:
@@ -148,7 +148,7 @@ class App(Video):
     display video info
     ==========================================
     """
-    def __button_get_video_infos(self, url: Entry):
+    def __button_get_video_infos(self, url: Entry) -> None:
         """
         buttnon to get infos from video
         :param url:
@@ -159,7 +159,7 @@ class App(Video):
                         command=lambda: self.__display_video_infos(url, button))
         button.place(x=130, y=550)
 
-    def __display_video_infos(self, url: Entry, button_get_video_info: Button):
+    def __display_video_infos(self, url: Entry, button_get_video_info: Button) -> None:
         """
         download video infos video and display checkbox
         :return:
