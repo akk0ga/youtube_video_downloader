@@ -48,11 +48,16 @@ class App(Video):
         return link
 
     def __display_video_title(self, video: Video):
+        """
+        display video title
+        :param video:
+        :return:
+        """
         video_title = video._get_title()
 
         if len(video_title) <= 60:
             max_char = 0
-            x = self.app_width//6
+            x = self.app_width // 6
             y = 350
         else:
             max_char = 450
@@ -61,10 +66,14 @@ class App(Video):
 
         title = Label(self.app, border=None, font='Terminal 15 bold', bg='#f1faee', fg='#e63946',
                       text=video_title, wraplength=max_char)
-        print(len(video_title))
         title.place(x=x, y=y)
 
     def __display_video_thumbnail(self, video: Video):
+        """
+        display the video thumbnail
+        :param video:
+        :return:
+        """
         # get the image from url
         get_image = requests.get(video._get_thumbnail(), stream=True).raw
         # load and resize the image retrieve
@@ -78,52 +87,63 @@ class App(Video):
         thumbnail.image = image
         thumbnail.place(x=x_center, y=380)
 
-    def __display_checkbox(self, resolution: list):
-        x_checkbox = 25
-        var = StringVar()
+    def __display_dropdown_resolution(self, resolution: list, video: Video):
+        """
+        create dropdown to select the video resolution
+        :param resolution:
+        :param video:
+        :return:
+        """
+        def selected():
+            print(clicked.get())
 
-        checkbox_title = Label(self.app, border=None, font='Terminal 15 bold', bg='#f1faee', fg='#457b9d',
-                               text='Choose your resolution')
-        checkbox_title.place(x=280, y=85)
+        clicked = StringVar()
+        clicked.set(resolution[0])
 
-        for res in resolution:
-            Checkbutton(self.app, text=res, bg='#f1faee', variable=var, onvalue=res, offvalue='off').place(x=x_checkbox, y=120)
-            x_checkbox += 100
+        dropdown = OptionMenu(self.app, clicked, *resolution)
+        dropdown.place(x=100, y=100)
+
+        button = Button(self.app, text='Select resolution', width=50, bg='#e63946', fg='#ffffff', font='Terminal 15 bold',
+                        activebackground='#e63946', activeforeground='#ffffff',
+                        command=selected)
+        button.place(x=130, y=550)
 
     def __button_dl(self, url: Entry):
-        # display button to launch dl
+        """
+        butty
+        :param url:
+        :return:
+        """
         button = Button(self.app, text='Show infos', width=50, bg='#e63946', fg='#ffffff', font='Terminal 15 bold',
-                        activebackground='#e63946', activeforeground='#ffffff', command=lambda: self.__download(url, button))
+                        activebackground='#e63946', activeforeground='#ffffff',
+                        command=lambda: self.__download(url, button))
         button.place(x=130, y=550)
 
     def __download(self, url: Entry, button: Button):
         """
-        download video infos video to the format select
+        download video infos video and display checkbox
         :return:
         """
-        if button['text'] != 'Download':
-            button['text'] = 'Download'
-            try:
+        try:
+            url = url.get()
+            video: Video = Video()
 
-                url = url.get()
-                video: Video = Video()
+            video.url = url
+            video.video = YouTube(url)
 
-                video.url = url
-                video.video = YouTube(url)
-                self.__display_video_title(video)
-                self.__display_video_thumbnail(video)
+            self.__display_video_title(video)
+            self.__display_video_thumbnail(video)
 
-                resolution = video._get_video_resolution()
-                self.__display_checkbox(resolution)
+            resolution = video._get_video_resolution()
+            self.__display_dropdown_resolution(resolution, video)
+            button.destroy()
 
-            except exceptions.RegexMatchError:
-                print('the url is not correct')
-            except exceptions.VideoPrivate:
-                print('Can\'t reach the video')
-            except exceptions.VideoUnavailable:
-                print('this video is unavailable')
-        else:
-            print('yes')
+        except exceptions.RegexMatchError:
+            print('the url is not correct')
+        except exceptions.VideoPrivate:
+            print('Can\'t reach the video')
+        except exceptions.VideoUnavailable:
+            print('this video is unavailable')
 
     def run(self):
         self.__display_logo()

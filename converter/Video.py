@@ -5,6 +5,7 @@ class Video:
     def __init__(self):
         self.__url: str = ''
         self.__video: YouTube or None = None
+        self.__resolution: str or None = None
 
     def _get_title(self) -> str:
         """
@@ -62,5 +63,12 @@ class Video:
         else:
             return self.__video
 
+    def set_resolution(self, resolution: str):
+        self.__resolution = resolution
+
+    def get_resolution(self):
+        return self.__url
+
     url = property(fget=get_url, fset=set_url)
     video = property(fget=get_video, fset=set_video)
+    resolution = property(fget=get_resolution, fset=set_resolution)
