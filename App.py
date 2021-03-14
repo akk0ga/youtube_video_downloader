@@ -79,46 +79,51 @@ class App(Video):
         thumbnail.place(x=x_center, y=380)
 
     def __display_checkbox(self, resolution: list):
-        print(resolution)
         x_checkbox = 25
+        var = StringVar()
 
         checkbox_title = Label(self.app, border=None, font='Terminal 15 bold', bg='#f1faee', fg='#457b9d',
                                text='Choose your resolution')
         checkbox_title.place(x=280, y=85)
 
         for res in resolution:
-            Checkbutton(self.app, text=res, bg='#f1faee', onvalue=res).place(x=x_checkbox, y=120)
+            Checkbutton(self.app, text=res, bg='#f1faee', variable=var, onvalue=res, offvalue='off').place(x=x_checkbox, y=120)
             x_checkbox += 100
 
     def __button_dl(self, url: Entry):
         # display button to launch dl
-        button = Button(self.app, text='Download', width=50, bg='#e63946', fg='#ffffff', font='Terminal 15 bold',
-                        activebackground='#e63946', activeforeground='#ffffff', command=lambda: self.__download(url))
+        button = Button(self.app, text='Show infos', width=50, bg='#e63946', fg='#ffffff', font='Terminal 15 bold',
+                        activebackground='#e63946', activeforeground='#ffffff', command=lambda: self.__download(url, button))
         button.place(x=130, y=550)
 
-    def __download(self, url: Entry):
+    def __download(self, url: Entry, button: Button):
         """
         download video infos video to the format select
         :return:
         """
-        try:
-            url = url.get()
-            video: Video = Video()
+        if button['text'] != 'Download':
+            button['text'] = 'Download'
+            try:
 
-            video.url = url
-            video.video = YouTube(url)
-            self.__display_video_title(video)
-            self.__display_video_thumbnail(video)
+                url = url.get()
+                video: Video = Video()
 
-            resolution = video._get_video_resolution()
-            self.__display_checkbox(resolution)
+                video.url = url
+                video.video = YouTube(url)
+                self.__display_video_title(video)
+                self.__display_video_thumbnail(video)
 
-        except exceptions.RegexMatchError:
-            print('the url is not correct')
-        except exceptions.VideoPrivate:
-            print('Can\'t reach the video')
-        except exceptions.VideoUnavailable:
-            print('this video is unavailable')
+                resolution = video._get_video_resolution()
+                self.__display_checkbox(resolution)
+
+            except exceptions.RegexMatchError:
+                print('the url is not correct')
+            except exceptions.VideoPrivate:
+                print('Can\'t reach the video')
+            except exceptions.VideoUnavailable:
+                print('this video is unavailable')
+        else:
+            print('yes')
 
     def run(self):
         self.__display_logo()
