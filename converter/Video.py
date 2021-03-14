@@ -67,7 +67,7 @@ class Video:
         self.__resolution = resolution
 
     def get_resolution(self):
-        return self.__url
+        return self.resolution
 
     url = property(fget=get_url, fset=set_url)
     video = property(fget=get_video, fset=set_video)

@@ -1,5 +1,6 @@
 # add pytube
 from tkinter import *
+from tkinter import messagebox
 from PIL import Image, ImageTk
 from pytube import exceptions
 from pytube import YouTube
@@ -20,6 +21,12 @@ class App(Video):
         self.app.configure(bg='#f1faee')
         self.app.resizable(False, False)
         self.app.iconbitmap('img/logo.ico')
+
+    """
+    ==========================================
+    app info
+    ==========================================
+    """
 
     def __display_title(self):
         # display app title
@@ -46,6 +53,12 @@ class App(Video):
         x_center = (self.app_width / 4)
         link.place(x=x_center, y=500)
         return link
+
+    """
+    ==========================================
+    create video info
+    ==========================================
+    """
 
     def __display_video_title(self, video: Video):
         """
@@ -87,57 +100,89 @@ class App(Video):
         thumbnail.image = image
         thumbnail.place(x=x_center, y=380)
 
-    def __display_dropdown_resolution(self, resolution: list, video: Video):
+    """
+    ==========================================
+    select resolution
+    ==========================================
+    """
+
+    def __select_resolution(self, resolution: list, video: Video):
         """
         create dropdown to select the video resolution
         :param resolution:
         :param video:
         :return:
         """
-        def selected():
-            print(clicked.get())
 
-        clicked = StringVar()
-        clicked.set(resolution[0])
+        def resolution_selected():
+            """
+            execute when trigger dl button
+            :return:
+            """
+            if clicked.get() != '0':
+                video.resolution = clicked.get()
+                print(video.resolution)
+            else:
+                messagebox.showinfo('Resolution not select', 'Please select resolution')
 
-        dropdown = OptionMenu(self.app, clicked, *resolution)
-        dropdown.place(x=100, y=100)
+        clicked = StringVar(value=0)
+        checkbox_title = Label(self.app, border=None, font='Terminal 15 bold', bg='#f1faee', fg='#457b9d',
+                               text='Select Resolution')
+        checkbox_title.place(x=310, y=70)
 
-        button = Button(self.app, text='Select resolution', width=50, bg='#e63946', fg='#ffffff', font='Terminal 15 bold',
+        # create checkbox
+        x = 0
+        for res in resolution:
+            Checkbutton(self.app, variable=clicked, onvalue=res, offvalue='off', bg='#f1faee', text=res).place(x=x,
+                                                                                                               y=100)
+            x += 100
+
+        # display dl button
+        button = Button(self.app, text='Download', width=50, bg='#e63946', fg='#ffffff', font='Terminal 15 bold',
                         activebackground='#e63946', activeforeground='#ffffff',
-                        command=selected)
+                        command=resolution_selected)
         button.place(x=130, y=550)
 
-    def __button_dl(self, url: Entry):
+    """
+    ==========================================
+    display video info
+    ==========================================
+    """
+    def __button_get_video_infos(self, url: Entry):
         """
-        butty
+        buttnon to get infos from video
         :param url:
         :return:
         """
         button = Button(self.app, text='Show infos', width=50, bg='#e63946', fg='#ffffff', font='Terminal 15 bold',
                         activebackground='#e63946', activeforeground='#ffffff',
-                        command=lambda: self.__download(url, button))
+                        command=lambda: self.__display_video_infos(url, button))
         button.place(x=130, y=550)
 
-    def __download(self, url: Entry, button: Button):
+    def __display_video_infos(self, url: Entry, button_get_video_info: Button):
         """
         download video infos video and display checkbox
         :return:
         """
         try:
+            # get url and create video instance
             url = url.get()
             video: Video = Video()
 
+            # set value
             video.url = url
             video.video = YouTube(url)
 
+            # display video title and thumbnail
             self.__display_video_title(video)
             self.__display_video_thumbnail(video)
 
+            # get and launch function to select resolution
             resolution = video._get_video_resolution()
-            self.__display_dropdown_resolution(resolution, video)
-            button.destroy()
+            self.__select_resolution(resolution, video)
 
+            # destroy button to show infos
+            button_get_video_info.destroy()
         except exceptions.RegexMatchError:
             print('the url is not correct')
         except exceptions.VideoPrivate:
@@ -148,7 +193,7 @@ class App(Video):
     def run(self):
         self.__display_logo()
         self.__display_title()
-        self.__button_dl(self.__url_field())
+        self.__button_get_video_infos(self.__url_field())
         self.app.mainloop()
 
 
