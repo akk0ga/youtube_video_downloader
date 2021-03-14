@@ -23,6 +23,18 @@ class Video:
         return thumbnail
         pass
 
+    def _get_video_resolution(self) -> list:
+        get_video_option = self.video.streams.filter(file_extension='mp4')
+        resolution = []
+
+        for stream in get_video_option:
+            # print(stream)
+            if not stream.resolution in resolution and stream.resolution is not None:
+                resolution.append(stream.resolution)
+
+        resolution.sort()
+        return resolution
+
     def _download_video(self):
         print('dl video')
 
@@ -34,6 +46,7 @@ class Video:
     getter & setter
     ===================================
     """
+
     def set_url(self, url: str):
         self.__url = url
 

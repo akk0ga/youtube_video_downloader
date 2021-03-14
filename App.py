@@ -26,39 +26,43 @@ class App(Video):
         title = Label(self.app, border=None, font='Terminal 15 bold', bg='#f1faee', fg='#e63946', text=self.title)
         title.place(x=270, y=20)
 
-    def __url_field(self):
-        # display entry where put the link
-        link = Entry(self.app, border=None, width=70)
-        link.insert(0, 'https://www.youtube.com/watch?v=DAkZ8kIvrxk&ab_channel=OfflineTV')
-        x_center = (self.app_width / 4)
-        link.place(x=x_center, y=500)
-        return link
-
     def __display_logo(self):
-        # open the image and create
-        render = ImageTk.PhotoImage(Image.open("img/logo.png"))
-        # calc to place logo at center
-        x_center = (self.app_width / 2) - (render.width() / 2)
+        # get and resize the image
+        get_image = Image.open("img/logo.png")
+        resize_image = get_image.resize((32, 32))
+        # load image
+        render = ImageTk.PhotoImage(resize_image)
         # create the image container
         logo = Label(self.app, border=None, bg='#f1faee', image=render)
         # insert the image in container
         logo.image = render
-        logo.place(x=x_center, y=70)
+        logo.place(x=540, y=15)
+
+    def __url_field(self):
+        # display entry where put the link
+        link = Entry(self.app, border=None, width=70)
+        link.insert(0,
+                    'https://www.youtube.com/watch?v=vWAC8Wkt9ok&ab_channel=STUDIOCHOOM%5B%EC%8A%A4%ED%8A%9C%EB%94%94%EC%98%A4%EC%B6%A4%5D')
+        x_center = (self.app_width / 4)
+        link.place(x=x_center, y=500)
+        return link
 
     def __display_video_title(self, video: Video):
         video_title = video._get_title()
 
         if len(video_title) <= 60:
             max_char = 0
-            x = 100
+            x = self.app_width//6
+            y = 350
         else:
             max_char = 450
-            x = self.app_width / 4
+            x = self.app_width // 3.5
+            y = 300
 
         title = Label(self.app, border=None, font='Terminal 15 bold', bg='#f1faee', fg='#e63946',
                       text=video_title, wraplength=max_char)
         print(len(video_title))
-        title.place(x=x, y=210)
+        title.place(x=x, y=y)
 
     def __display_video_thumbnail(self, video: Video):
         # get the image from url
@@ -72,17 +76,29 @@ class App(Video):
         # place the image
         x_center = (self.app_width / 2) - (image.width() / 2)
         thumbnail.image = image
-        thumbnail.place(x=x_center, y=300)
+        thumbnail.place(x=x_center, y=380)
+
+    def __display_checkbox(self, resolution: list):
+        print(resolution)
+        x_checkbox = 25
+
+        checkbox_title = Label(self.app, border=None, font='Terminal 15 bold', bg='#f1faee', fg='#457b9d',
+                               text='Choose your resolution')
+        checkbox_title.place(x=280, y=85)
+
+        for res in resolution:
+            Checkbutton(self.app, text=res, bg='#f1faee', onvalue=res).place(x=x_checkbox, y=120)
+            x_checkbox += 100
 
     def __button_dl(self, url: Entry):
         # display button to launch dl
         button = Button(self.app, text='Download', width=50, bg='#e63946', fg='#ffffff', font='Terminal 15 bold',
-                        activebackground='#e63946', activeforeground='#ffffff', command=lambda: self.__convert(url))
+                        activebackground='#e63946', activeforeground='#ffffff', command=lambda: self.__download(url))
         button.place(x=130, y=550)
 
-    def __convert(self, url: Entry):
+    def __download(self, url: Entry):
         """
-        convert video to the format select
+        download video infos video to the format select
         :return:
         """
         try:
@@ -93,10 +109,9 @@ class App(Video):
             video.video = YouTube(url)
             self.__display_video_title(video)
             self.__display_video_thumbnail(video)
-            for stream in video.video.streams.filter(file_extension='mp4'):
-                print(stream)
 
-            video._download_video()
+            resolution = video._get_video_resolution()
+            self.__display_checkbox(resolution)
 
         except exceptions.RegexMatchError:
             print('the url is not correct')
