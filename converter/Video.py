@@ -25,22 +25,19 @@ class Video:
         pass
 
     def _get_video_resolution(self) -> list:
+        """
+        create list of resolution
+        :return:
+        """
         get_video_option = self.video.streams.filter(file_extension='mp4')
         resolution = []
 
         for stream in get_video_option:
-            # print(stream)
             if not stream.resolution in resolution and stream.resolution is not None:
                 resolution.append(stream.resolution)
 
         resolution.sort()
         return resolution
-
-    def _download_video(self):
-        print('dl video')
-
-    def _download_video_audio(self):
-        print('dl audio')
 
     """
     ===================================
@@ -67,7 +64,7 @@ class Video:
         self.__resolution = resolution
 
     def get_resolution(self):
-        return self.resolution
+        return self.__resolution
 
     url = property(fget=get_url, fset=set_url)
     video = property(fget=get_video, fset=set_video)
