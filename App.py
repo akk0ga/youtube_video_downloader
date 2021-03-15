@@ -112,11 +112,12 @@ class App(Video):
 
     def __browse_path(self, video: Video):
         def browse():
-            filename = filedialog.askdirectory()
-            Label(self.app, text=filename).place(x=0, y=310)
+            video.path = filedialog.askdirectory()
+            Label(self.app, text=video.path, bg='#f1faee').place(x=100, y=150)
 
-        button_select_directory = Button(self.app, text='Select folder', command=browse)
-        button_select_directory.place(x=100, y=300)
+        button_select_directory = Button(self.app, text='Select folder', bg='#457b9d', fg='#ffffff',
+                                         font='Terminal 11 bold', command=browse)
+        button_select_directory.place(x=10, y=150)
 
     def __select_resolution(self, resolution: list, video: Video) -> None:
         """
@@ -131,11 +132,17 @@ class App(Video):
             execute when trigger dl button
             :return:
             """
-            if clicked.get() != '0':
+            value = clicked.get()
+            if value != '0' and value != 'off' and video.path is not None:
                 video.resolution = clicked.get()
                 print(video.resolution)
             else:
-                messagebox.showinfo('Resolution not select', 'Please select resolution')
+                if clicked.get() == '0' or clicked.get() == 'off' and video.path is None:
+                    messagebox.showinfo('No resolution and path selected', 'Please select resolution and a path')
+                elif clicked.get() == '0' or clicked.get() == 'off':
+                    messagebox.showinfo('No resolution selected', 'Please select resolution')
+                else:
+                    messagebox.showinfo('No path selected', 'Please select path')
 
         clicked = StringVar(value=0)
         checkbox_title = Label(self.app, border=None, font='Terminal 15 bold', bg='#f1faee', fg='#457b9d',

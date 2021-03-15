@@ -67,6 +67,13 @@ class Video:
     def get_resolution(self):
         return self.__resolution
 
+    def set_path(self, path: str):
+        self.__path = path
+
+    def get_path(self):
+        return self.__path
+
     url = property(fget=get_url, fset=set_url)
     video = property(fget=get_video, fset=set_video)
     resolution = property(fget=get_resolution, fset=set_resolution)
+    path = property(fget=get_path, fset=set_path)
