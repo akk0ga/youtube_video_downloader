@@ -119,9 +119,9 @@ class App(Video):
                                          font='Terminal 11 bold', command=browse)
         button_select_directory.place(x=10, y=150)
 
-    def __select_resolution(self, resolution: list, video: Video) -> None:
+    def __select_resolution_path(self, resolution: list, video: Video) -> None:
         """
-        create dropdown to select the video resolution
+        create dropdown to select the video resolution and path
         :param resolution:
         :param video:
         :return:
@@ -200,7 +200,7 @@ class App(Video):
 
             # get and launch function to select resolution
             resolution = video._get_video_resolution()
-            self.__select_resolution(resolution, video)
+            self.__select_resolution_path(resolution, video)
 
             # destroy button to show infos
             button_get_video_info.destroy()
