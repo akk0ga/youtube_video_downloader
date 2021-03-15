@@ -1,9 +1,13 @@
 # add pytube
 from tkinter import *
 from tkinter import messagebox
+from tkinter import filedialog
+
 from PIL import Image, ImageTk
+
 from pytube import exceptions
 from pytube import YouTube
+
 from converter.Video import Video
 import requests
 
@@ -71,11 +75,11 @@ class App(Video):
         if len(video_title) <= 60:
             max_char = 0
             x = self.app_width // 6
-            y = 250
+            y = 300
         else:
             max_char = 450
             x = self.app_width // 3.5
-            y = 220
+            y = 320
 
         title = Label(self.app, border=None, font='Terminal 15 bold', bg='#f1faee', fg='#e63946',
                       text=video_title, wraplength=max_char)
@@ -91,20 +95,28 @@ class App(Video):
         get_image = requests.get(video._get_thumbnail(), stream=True).raw
         # load and resize the image retrieve
         load_image = Image.open(get_image)
-        resize_image = load_image.resize((400, 200))
+        resize_image = load_image.resize((300, 150))
         # create the container for image
         image = ImageTk.PhotoImage(resize_image)
         thumbnail = Label(self.app, border=None, bg='#f1faee', image=image)
         # place the image
         x_center = (self.app_width / 2) - (image.width() / 2)
         thumbnail.image = image
-        thumbnail.place(x=x_center, y=290)
+        thumbnail.place(x=x_center, y=330)
 
     """
     ==========================================
     select resolution
     ==========================================
     """
+
+    def __browse_path(self, video: Video):
+        def browse():
+            filename = filedialog.askdirectory()
+            Label(self.app, text=filename).place(x=0, y=310)
+
+        button_select_directory = Button(self.app, text='Select folder', command=browse)
+        button_select_directory.place(x=100, y=300)
 
     def __select_resolution(self, resolution: list, video: Video) -> None:
         """
@@ -142,6 +154,8 @@ class App(Video):
                         activebackground='#e63946', activeforeground='#ffffff',
                         command=resolution_selected)
         button.place(x=130, y=550)
+
+        self.__browse_path(video)
 
     """
     ==========================================

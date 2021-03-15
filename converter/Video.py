@@ -6,6 +6,7 @@ class Video:
         self.__url: str = ''
         self.__video: YouTube or None = None
         self.__resolution: str or None = None
+        self.__path: str or None = None
 
     def _get_title(self) -> str:
         """
