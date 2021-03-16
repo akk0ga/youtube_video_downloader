@@ -126,6 +126,7 @@ class App(Video):
             """
             value = clicked.get()
             if value != '0' and value != 'off':
+                print(clicked.get())
                 if value == 'audio':
                     dl = Downloader(extension='mp3', resolution=clicked.get(), path=filedialog.askdirectory(), video=video)
                 else:

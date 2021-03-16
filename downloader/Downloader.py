@@ -12,17 +12,19 @@ class Downloader:
 
     def download(self):
         fps: int = 0
-        only_audio = self.__extension == 'mp3' if False else True
-        print(only_audio)
-        for element in self.__video.streams.filter(file_extension='mp4', resolution=self.__resolution,
-                                                   progressive=True, only_audio=only_audio):
-            if fps < element.fps:
-                fps = element.fps
-            print(element)
+        print(self.__extension)
+
+        only_audio = True if self.__extension == 'mp3' else False
+        type = 'audio' if only_audio else 'video'
+        mime_type = 'audio/mp4' if type == 'audio' else 'video/mp4'
+
+        if type == 'video':
+            streams = self.__video.streams.filter(only_audio=only_audio, type=type, mime_type=mime_type, progressive=True)
+            for element in streams:
+                print(element)
+        else:
+            streams = self.__video.streams.filter(only_audio=only_audio, type=type, mime_type=mime_type)
 
         # download video
-        video_format = self.__video.streams.filter(file_extension='mp4', resolution=self.__resolution,
-                                                   progressive=True, only_audio=only_audio).first()
-
-        video_format.download(output_path=self.__path)
+        streams.first().download(output_path=self.__path, filename=f'video_{self.__video.title}')
         messagebox.showinfo(title='Download success !', message=f"the video: {self.__video.title} is downloaded")
