@@ -8,7 +8,9 @@ from PIL import Image, ImageTk
 from pytube import exceptions
 from pytube import YouTube
 
-from converter.Video import Video
+from video.Video import Video
+from downloader.Downloader import Downloader
+
 import requests
 
 
@@ -79,7 +81,7 @@ class App(Video):
         else:
             max_char = 450
             x = self.app_width // 3.5
-            y = 320
+            y = 250
 
         title = Label(self.app, border=None, font='Terminal 15 bold', bg='#f1faee', fg='#e63946',
                       text=video_title, wraplength=max_char)
@@ -106,43 +108,32 @@ class App(Video):
 
     """
     ==========================================
-    select resolution
+    select resolution and path
     ==========================================
     """
 
-    def __browse_path(self, video: Video):
-        def browse():
-            video.path = filedialog.askdirectory()
-            Label(self.app, text=video.path, bg='#f1faee').place(x=100, y=150)
-
-        button_select_directory = Button(self.app, text='Select folder', bg='#457b9d', fg='#ffffff',
-                                         font='Terminal 11 bold', command=browse)
-        button_select_directory.place(x=10, y=150)
-
-    def __select_resolution_path(self, resolution: list, video: Video) -> None:
+    def __select_resolution_path(self, resolution: list, video: YouTube) -> None:
         """
         create dropdown to select the video resolution and path
         :param resolution:
-        :param video:
         :return:
         """
 
-        def resolution_selected() -> None:
+        def download(video: YouTube) -> None:
             """
             execute when trigger dl button
             :return:
             """
             value = clicked.get()
-            if value != '0' and value != 'off' and video.path is not None:
-                video.resolution = clicked.get()
-                print(video.resolution)
-            else:
-                if clicked.get() == '0' or clicked.get() == 'off' and video.path is None:
-                    messagebox.showinfo('No resolution and path selected', 'Please select resolution and a path')
-                elif clicked.get() == '0' or clicked.get() == 'off':
-                    messagebox.showinfo('No resolution selected', 'Please select resolution')
+            if value != '0' and value != 'off':
+                if value == 'audio':
+                    dl = Downloader(extension='mp3', resolution=clicked.get(), path=filedialog.askdirectory(), video=video)
                 else:
-                    messagebox.showinfo('No path selected', 'Please select path')
+                    dl = Downloader(extension='mp4', resolution=clicked.get(), path=filedialog.askdirectory(), video=video)
+                dl.download()
+            else:
+                if clicked.get() == '0' or clicked.get() == 'off':
+                    messagebox.showinfo('No resolution selected', 'Please select resolution')
 
         clicked = StringVar(value=0)
         checkbox_title = Label(self.app, border=None, font='Terminal 15 bold', bg='#f1faee', fg='#457b9d',
@@ -152,17 +143,15 @@ class App(Video):
         # create checkbox
         x = 0
         for res in resolution:
-            Checkbutton(self.app, variable=clicked, onvalue=res, offvalue='off', bg='#f1faee', text=res).place(x=x,
-                                                                                                               y=100)
+            Checkbutton(self.app, variable=clicked, onvalue=res, offvalue='off', bg='#f1faee', text=res).place(x=x, y=100)
             x += 100
+        Checkbutton(self.app, variable=clicked, onvalue='audio', offvalue='off', bg='#f1faee', text='audio only').place(x=self.app_width//2, y=150)
 
         # display dl button
         button = Button(self.app, text='Download', width=50, bg='#e63946', fg='#ffffff', font='Terminal 15 bold',
                         activebackground='#e63946', activeforeground='#ffffff',
-                        command=resolution_selected)
+                        command=lambda: download(video=video))
         button.place(x=130, y=550)
-
-        self.__browse_path(video)
 
     """
     ==========================================
@@ -200,7 +189,7 @@ class App(Video):
 
             # get and launch function to select resolution
             resolution = video._get_video_resolution()
-            self.__select_resolution_path(resolution, video)
+            self.__select_resolution_path(resolution, video.video)
 
             # destroy button to show infos
             button_get_video_info.destroy()
