@@ -170,34 +170,34 @@ class App(Video):
 
     def __display_video_infos(self, url: Entry, button_get_video_info: Button) -> None:
         """
-        download video infos video and display checkbox
+        download new_video infos new_video and display checkbox
         :return:
         """
         try:
-            # get url and create video instance
+            # get url and create new_video instance
             url = url.get()
-            video: Video = Video()
+            new_video: Video = Video()
 
             # set value
-            video.url = url
-            video.video = YouTube(url)
+            new_video.url = url
+            new_video.video = YouTube(url)
 
-            # display video title and thumbnail
-            self.__display_video_title(video)
-            self.__display_video_thumbnail(video)
+            # display new_video title and thumbnail
+            self.__display_video_title(new_video)
+            self.__display_video_thumbnail(new_video)
 
             # get and launch function to select resolution
-            resolution = video._get_video_resolution()
-            self.__select_resolution_and_download(resolution, video.video)
+            resolution = new_video._get_video_resolution()
+            self.__select_resolution_and_download(resolution, new_video.video)
 
             # destroy button to show infos
             button_get_video_info.destroy()
         except exceptions.RegexMatchError:
             messagebox.showwarning(title='Incorrect url', message=f"the url is incorrect")
         except exceptions.VideoPrivate:
-            messagebox.showwarning(title='Private video', message=f"the video is private")
+            messagebox.showwarning(title='Private new_video', message=f"the new_video is private")
         except exceptions.VideoUnavailable:
-            messagebox.showwarning(title='Unvailable video', message=f"this video is unavailable in your country")
+            messagebox.showwarning(title='Unvailable new_video', message=f"this new_video is unavailable in your country")
 
     def run(self):
         self.__display_logo()
