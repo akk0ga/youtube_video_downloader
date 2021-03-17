@@ -36,8 +36,8 @@ class App(Video):
 
     def __display_title(self) -> None:
         # display app title
-        title = Label(self.app, border=None, font='Terminal 15 bold', bg='#f1faee', fg='#e63946', text=self.title)
-        title.place(x=270, y=20)
+        Label(self.app, border=None, font='Terminal 15 bold', bg='#f1faee', fg='#e63946', text=self.title)\
+            .place(x=270, y=20)
 
     def __display_logo(self) -> None:
         # get and resize the image
@@ -53,10 +53,9 @@ class App(Video):
 
     def __url_field(self) -> Entry:
         # display entry where put the link
-        link = Entry(self.app, border=None, width=70)
-        link.insert(0, 'url')
         x_center = (self.app_width / 4)
-        link.place(x=x_center, y=500)
+        link = Entry(self.app, border=None, width=70).place(x=x_center, y=500)
+        link.insert(0, 'url')
         return link
 
     """
@@ -82,9 +81,8 @@ class App(Video):
             x = self.app_width // 3.5
             y = 250
 
-        title = Label(self.app, border=None, font='Terminal 15 bold', bg='#f1faee', fg='#e63946',
-                      text=video_title, wraplength=max_char)
-        title.place(x=x, y=y)
+        Label(self.app, border=None, font='Terminal 15 bold', bg='#f1faee', fg='#e63946',
+              text=video_title, wraplength=max_char).place(x=x, y=y)
 
     def __display_video_thumbnail(self, video: Video) -> None:
         """
@@ -110,20 +108,21 @@ class App(Video):
     select resolution and path
     ==========================================
     """
+
     def __select_resolution_and_download(self, resolution: list, video: YouTube) -> None:
         """
         download the video with the chosen resolution
         :param resolution:
         :return:
         """
-        def __download(video: YouTube) -> None:
+        def __download() -> None:
             """
             execute when trigger dl button
             :return:
             """
             value = clicked.get()
             if value != '0' or value != 'off':
-                extension = 'mp3' if value == 'audio'else 'mp4'
+                extension = 'mp3' if value == 'audio' else 'mp4'
                 dl = Downloader(extension=extension, resolution=clicked.get(), path=filedialog.askdirectory(),
                                 video=video)
                 dl.download()
@@ -132,23 +131,23 @@ class App(Video):
 
         # create checkbox var type and title
         clicked = StringVar(value=0)
-        checkbox_title = Label(self.app, border=None, font='Terminal 15 bold', bg='#f1faee', fg='#457b9d', text='Select Resolution')
-        checkbox_title.place(x=310, y=70)
+        Label(self.app, border=None, font='Terminal 15 bold', bg='#f1faee', fg='#457b9d', text='Select Resolution') \
+            .place(x=310, y=70)
 
         # create video resolution checkbox
-        x = (self.app_width // 2) - len(resolution)
+        x = 0
         for res in resolution:
             Checkbutton(self.app, variable=clicked, onvalue=res, offvalue='off', bg='#f1faee', text=res).place(x=x, y=100)
             x += 100
 
         # create audio only choice
-        Checkbutton(self.app, variable=clicked, onvalue='audio', offvalue='off', bg='#f1faee', text='audio only')\
+        Checkbutton(self.app, variable=clicked, onvalue='audio', offvalue='off', bg='#f1faee', text='audio only') \
             .place(x=self.app_width // 2, y=150)
 
         # display dl button
         button = Button(self.app, text='Download', width=50, bg='#e63946', fg='#ffffff', font='Terminal 15 bold',
                         activebackground='#e63946', activeforeground='#ffffff',
-                        command=lambda: __download(video=video))
+                        command=lambda: __download())
         button.place(x=130, y=550)
 
     """
@@ -159,7 +158,7 @@ class App(Video):
 
     def __button_get_video_infos(self, url: Entry) -> None:
         """
-        buttnon to get infos from video
+        button to get info from video
         :param url:
         :return:
         """
@@ -197,7 +196,8 @@ class App(Video):
         except exceptions.VideoPrivate:
             messagebox.showwarning(title='Private new_video', message=f"the new_video is private")
         except exceptions.VideoUnavailable:
-            messagebox.showwarning(title='Unvailable new_video', message=f"this new_video is unavailable in your country")
+            messagebox.showwarning(title='Unvailable new_video',
+                                   message=f"this new_video is unavailable in your country")
 
     def run(self):
         self.__display_logo()

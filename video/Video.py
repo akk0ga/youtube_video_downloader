@@ -21,7 +21,6 @@ class Video:
         """
         thumbnail = self.__video.thumbnail_url
         return thumbnail
-        pass
 
     def _get_video_resolution(self) -> list:
         """
@@ -32,7 +31,7 @@ class Video:
         resolution = []
 
         for stream in get_video_option:
-            if not stream.resolution in resolution and stream.resolution is not None:
+            if stream.resolution not in resolution and stream.resolution is not None:
                 resolution.append(stream.resolution)
 
         resolution.sort()
