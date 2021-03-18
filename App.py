@@ -54,7 +54,8 @@ class App(Video):
     def __url_field(self) -> Entry:
         # display entry where put the link
         x_center = (self.app_width / 4)
-        link = Entry(self.app, border=None, width=70).place(x=x_center, y=500)
+        link = Entry(self.app, border=None, width=70)
+        link.place(x=x_center, y=500)
         link.insert(0, 'url')
         return link
 
